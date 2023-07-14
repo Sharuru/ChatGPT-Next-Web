@@ -108,18 +108,18 @@ export function SessionConfigModel(props: { onClose: () => void }) {
               }
             }}
           />,
-          <IconButton
-            key="copy"
-            icon={<CopyIcon />}
-            bordered
-            text={Locale.Chat.Config.SaveAs}
-            onClick={() => {
-              navigate(Path.Masks);
-              setTimeout(() => {
-                maskStore.create(session.mask);
-              }, 500);
-            }}
-          />,
+          // <IconButton
+          //   key="copy"
+          //   icon={<CopyIcon />}
+          //   bordered
+          //   text={Locale.Chat.Config.SaveAs}
+          //   onClick={() => {
+          //     navigate(Path.Masks);
+          //     setTimeout(() => {
+          //       maskStore.create(session.mask);
+          //     }, 500);
+          //   }}
+          // />,
         ]}
       >
         <MaskConfig
@@ -463,7 +463,7 @@ export function ChatActions(props: {
         }
       />
 
-      <ChatAction
+      {/* <ChatAction
         onClick={props.showPromptHints}
         text={Locale.Chat.InputActions.Prompt}
         icon={<PromptIcon />}
@@ -475,7 +475,7 @@ export function ChatActions(props: {
         }}
         text={Locale.Chat.InputActions.Masks}
         icon={<MaskIcon />}
-      />
+      /> */}
 
       <ChatAction
         text={Locale.Chat.InputActions.Clear}
@@ -601,15 +601,16 @@ export function Chat() {
     // clear search results
     if (n === 0) {
       setPromptHints([]);
-    } else if (text.startsWith(ChatCommandPrefix)) {
-      setPromptHints(chatCommands.search(text));
-    } else if (!config.disablePromptHint && n < SEARCH_TEXT_LIMIT) {
-      // check if need to trigger auto completion
-      if (text.startsWith("/")) {
-        let searchText = text.slice(1);
-        onSearch(searchText);
-      }
     }
+    // else if (text.startsWith(ChatCommandPrefix)) {
+    //   setPromptHints(chatCommands.search(text));
+    // } else if (!config.disablePromptHint && n < SEARCH_TEXT_LIMIT) {
+    //   // check if need to trigger auto completion
+    //   if (text.startsWith("/")) {
+    //     let searchText = text.slice(1);
+    //     onSearch(searchText);
+    //   }
+    // }
   };
 
   const doSubmit = (userInput: string) => {
@@ -986,7 +987,7 @@ export function Chat() {
                   <div className={styles["chat-message-header"]}>
                     <div className={styles["chat-message-avatar"]}>
                       <div className={styles["chat-message-edit"]}>
-                        <IconButton
+                        {/* <IconButton
                           icon={<EditIcon />}
                           onClick={async () => {
                             const newMessage = await showPrompt(
@@ -1003,7 +1004,7 @@ export function Chat() {
                               }
                             });
                           }}
-                        ></IconButton>
+                        ></IconButton> */}
                       </div>
                       {isUser ? (
                         <Avatar avatar={config.avatar} />

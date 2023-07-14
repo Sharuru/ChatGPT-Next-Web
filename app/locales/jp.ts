@@ -28,7 +28,8 @@ const jp: PartialLocaleType = {
       if (submitKey === String(SubmitKey.Enter)) {
         inputHints += "，Shift + Enter で改行";
       }
-      return inputHints + "，/ で自動補完をトリガー";
+      return inputHints;
+      // return inputHints + "，/ で自動補完をトリガー";
     },
     Send: "送信",
     Config: {
