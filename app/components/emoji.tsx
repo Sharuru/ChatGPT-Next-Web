@@ -45,7 +45,7 @@ export function Avatar(props: { model?: ModelType; avatar?: string }) {
 
   return (
     <div className="user-avatar">
-      <NextImage src={UserIcon.src} alt="logo" width={20} height={20} />
+      <NextImage src={UserIcon.src} alt="logo" width={24} height={24} />
       {/* {props.avatar && <EmojiAvatar avatar={props.avatar} />} */}
     </div>
   );

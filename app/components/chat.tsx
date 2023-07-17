@@ -931,7 +931,7 @@ export function Chat() {
               }}
             />
           </div>
-          {showMaxIcon && (
+          {/* {showMaxIcon && (
             <div className="window-action-button">
               <IconButton
                 icon={config.tightBorder ? <MinIcon /> : <MaxIcon />}
@@ -943,7 +943,7 @@ export function Chat() {
                 }}
               />
             </div>
-          )}
+          )} */}
         </div>
 
         <PromptToast

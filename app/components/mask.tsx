@@ -91,7 +91,7 @@ export function MaskConfig(props: {
       />
 
       <List>
-        <ListItem title={Locale.Mask.Config.Avatar}>
+        {/* <ListItem title={Locale.Mask.Config.Avatar}>
           <Popover
             content={
               <AvatarPicker
@@ -111,7 +111,7 @@ export function MaskConfig(props: {
               <MaskAvatar mask={props.mask} />
             </div>
           </Popover>
-        </ListItem>
+        </ListItem> */}
         <ListItem title={Locale.Mask.Config.Name}>
           <input
             type="text"
