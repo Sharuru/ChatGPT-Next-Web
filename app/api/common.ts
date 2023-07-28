@@ -7,8 +7,9 @@ const BASE_URL = process.env.BASE_URL ?? OPENAI_URL;
 const DISABLE_GPT4 = !!process.env.DISABLE_GPT4;
 
 export async function requestOpenai(req: NextRequest) {
+  const clonedReq = req.clone();
   const controller = new AbortController();
-  const authValue = req.headers.get("Authorization") ?? "";
+  const authValue = clonedReq.headers.get("Authorization") ?? "";
   const openaiPath = `${req.nextUrl.pathname}${req.nextUrl.search}`.replaceAll(
     "/api/openai/",
     "",
@@ -27,6 +28,10 @@ export async function requestOpenai(req: NextRequest) {
     console.log("[Org ID]", process.env.OPENAI_ORG_ID);
   }
 
+  const reqJson = JSON.parse(await req.text());
+  const latestQuestion = reqJson.messages[reqJson.messages.length - 1].content;
+  console.log("[Ask] " + latestQuestion);
+
   const timeoutId = setTimeout(() => {
     controller.abort();
   }, 10 * 60 * 1000);
@@ -41,17 +46,17 @@ export async function requestOpenai(req: NextRequest) {
         "OpenAI-Organization": process.env.OPENAI_ORG_ID,
       }),
     },
-    method: req.method,
-    body: req.body,
+    method: clonedReq.method,
+    body: clonedReq.body,
     // @ts-ignore
     duplex: "half",
     signal: controller.signal,
   };
 
   // #1815 try to refuse gpt4 request
-  if (DISABLE_GPT4 && req.body) {
+  if (DISABLE_GPT4 && clonedReq.body) {
     try {
-      const clonedBody = await req.text();
+      const clonedBody = await clonedReq.text();
       fetchOptions.body = clonedBody;
 
       const jsonBody = JSON.parse(clonedBody);
@@ -74,16 +79,17 @@ export async function requestOpenai(req: NextRequest) {
 
   try {
     const res = await fetch(fetchUrl, fetchOptions);
-
+    const clonedRes = res.clone();
     // to prevent browser prompt for credentials
     const newHeaders = new Headers(res.headers);
     newHeaders.delete("www-authenticate");
     // to disable nginx buffering
     newHeaders.set("X-Accel-Buffering", "no");
-
-    return new Response(res.body, {
-      status: res.status,
-      statusText: res.statusText,
+    // const responseBody = await res.text(); // Get the response body as text
+    // console.log("[Answer] " + responseBody);
+    return new Response(clonedRes.body, {
+      status: clonedRes.status,
+      statusText: clonedRes.statusText,
       headers: newHeaders,
     });
   } finally {
