@@ -29,8 +29,9 @@ export async function requestOpenai(req: NextRequest) {
   }
 
   const reqJson = JSON.parse(await req.text());
+  const requstTrackId = Math.floor(Math.random() * 100) + 1;
   const latestQuestion = reqJson.messages[reqJson.messages.length - 1].content;
-  console.log("[Ask] " + latestQuestion);
+  console.log("[Ask " + requstTrackId + "] " + latestQuestion);
 
   const timeoutId = setTimeout(() => {
     controller.abort();
@@ -80,14 +81,65 @@ export async function requestOpenai(req: NextRequest) {
   try {
     const res = await fetch(fetchUrl, fetchOptions);
     const clonedRes = res.clone();
+
     // to prevent browser prompt for credentials
     const newHeaders = new Headers(res.headers);
     newHeaders.delete("www-authenticate");
+
     // to disable nginx buffering
     newHeaders.set("X-Accel-Buffering", "no");
-    // const responseBody = await res.text(); // Get the response body as text
-    // console.log("[Answer] " + responseBody);
-    return new Response(clonedRes.body, {
+
+    let responseText = "";
+    // Create a new ReadableStream that logs the data as it's read
+    const loggingStream = new ReadableStream({
+      start(controller) {
+        const reader = clonedRes.body.getReader();
+
+        function push() {
+          reader.read().then(({ done, value }) => {
+            if (done) {
+              controller.close();
+
+              const dataArray: string[] = responseText.trim().split("\n");
+
+              // Array to store the extracted delta.content values
+              const deltaContents: string[] = [];
+
+              // Loop through the data and extract delta.content values
+              dataArray.forEach((jsonString) => {
+                const deltaContent = getDeltaContent(
+                  jsonString.substring(6).trim(),
+                );
+                if (deltaContent !== null) {
+                  deltaContents.push(deltaContent);
+                }
+              });
+
+              // Output the extracted delta.content values
+              deltaContents.shift(); // Remove the first element
+              deltaContents.pop(); // Remove the last element
+
+              // Convert the deltaContents array to a string
+              const deltaContentsString = deltaContents.join("");
+
+              // Output the deltaContentsString
+              console.log(
+                "[Answer " + requstTrackId + "] " + deltaContentsString,
+              );
+              return;
+            }
+
+            responseText += new TextDecoder("UTF-8").decode(value);
+            controller.enqueue(value);
+            push();
+          });
+        }
+
+        push();
+      },
+    });
+
+    return new Response(loggingStream, {
       status: clonedRes.status,
       statusText: clonedRes.statusText,
       headers: newHeaders,
@@ -95,4 +147,19 @@ export async function requestOpenai(req: NextRequest) {
   } finally {
     clearTimeout(timeoutId);
   }
+}
+
+function getDeltaContent(jsonString: string) {
+  if (!jsonString.startsWith("{")) {
+    return null;
+  }
+  try {
+    const obj = JSON.parse(jsonString);
+    if (obj && obj.choices && obj.choices.length > 0) {
+      return obj.choices[0].delta.content;
+    }
+  } catch (error) {
+    console.error("Error parsing JSON:", error);
+  }
+  return null;
 }
