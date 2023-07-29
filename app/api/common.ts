@@ -93,7 +93,7 @@ export async function requestOpenai(req: NextRequest) {
     // Create a new ReadableStream that logs the data as it's read
     const loggingStream = new ReadableStream({
       start(controller) {
-        const reader = clonedRes.body.getReader();
+        const reader = clonedRes.body!.getReader();
 
         function push() {
           reader.read().then(({ done, value }) => {
