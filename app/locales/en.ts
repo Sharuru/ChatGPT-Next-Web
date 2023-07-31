@@ -4,6 +4,8 @@ import { LocaleType } from "./index";
 // if you are adding a new translation, please use PartialLocaleType instead of LocaleType
 const en: LocaleType = {
   WIP: "Coming Soon...",
+  Storage:
+    "LocalStorage capacity is reaching its limit and will no longer be available. Please delete expired chat records to free up space.",
   Error: {
     Unauthorized:
       "Unauthorized access, please enter access code in [auth](/#/auth) page.",

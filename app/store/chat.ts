@@ -541,6 +541,27 @@ export const useChatStore = create<ChatStore>()(
           modelConfig.compressMessageLengthThreshold,
         );
 
+        function getLocalStorageAvailableSize() {
+          var totalBytes = 0;
+          for (var key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+              totalBytes += localStorage.getItem(key)!.length;
+            }
+          }
+
+          var totalMegabytes = totalBytes / 1024 / 1024;
+          console.log(
+            "[Storage] current local storage is: " + totalMegabytes + " MB",
+          );
+          if (totalMegabytes >= 4.5) {
+            return true;
+          }
+        }
+
+        if (getLocalStorageAvailableSize()) {
+          showToast(Locale.Storage);
+        }
+
         if (
           historyMsgLength > modelConfig.compressMessageLengthThreshold &&
           modelConfig.sendMemory

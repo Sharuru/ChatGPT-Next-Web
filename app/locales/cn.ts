@@ -2,6 +2,7 @@ import { SubmitKey } from "../store/config";
 
 const cn = {
   WIP: "该功能仍在开发中……",
+  Storage: "LocalStorage 容量将满，届时将无法使用，请删除过期聊天记录。",
   Error: {
     Unauthorized:
       "访问密码不正确或为空，请前往[登录](/#/auth)页输入正确的访问密码，或者在[设置](/#/settings)页填入你自己的 OpenAI API Key。",

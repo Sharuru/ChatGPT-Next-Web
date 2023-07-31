@@ -3,6 +3,8 @@ import type { PartialLocaleType } from "./index";
 
 const jp: PartialLocaleType = {
   WIP: "この機能は開発中です",
+  Storage:
+    "LocalStorageの容量がいっぱいになります。その場合、使用できなくなりますので、期限切れのチャット履歴を削除してください。",
   Error: {
     Unauthorized:
       "現在は未承認状態です。左下の設定ボタンをクリックし、アクセスパスワードかOpenAIのAPIキーを入力してください。",
