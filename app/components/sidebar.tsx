@@ -119,7 +119,12 @@ export function SideBar(props: { className?: string }) {
         <div className={styles["sidebar-title"]} data-tauri-drag-region>
           ChatGPT Web UI
         </div>
-        <div className={styles["sidebar-sub-title"]}>Alpha Version</div>
+        <div
+          className={styles["sidebar-sub-title"]}
+          title="增加了以下模型：&#10;gpt-4o-mini&#10;claude-3-5-sonnet&#10;gemini-pro&#10;deepseek-chat&#10;deepseek-coder"
+        >
+          V20240719
+        </div>
         <div className={styles["sidebar-logo"] + " no-dark"}>
           <ChatGptIcon />
         </div>

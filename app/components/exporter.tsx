@@ -447,7 +447,7 @@ export function ImagePreviewer(props: {
 
           <div>
             <div className={styles["main-title"]}>ChatGPT Web UI</div>
-            <div className={styles["sub-title"]}>Alpha Version</div>
+            <div className={styles["sub-title"]}>V20240719</div>
             <div className={styles["icons"]}>
               <ExportAvatar avatar={config.avatar} />
               <span className={styles["icon-space"]}>&</span>
